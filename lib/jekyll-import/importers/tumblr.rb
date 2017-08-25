@@ -130,6 +130,7 @@ module JekyllImport
             end
           when "quote"
             title = post["quote-text"]
+            title = "Quote"
             content = "<blockquote>#{post["quote-text"]}</blockquote>"
             unless post["quote-source"].nil?
               content << "&#8212;" + post["quote-source"]
