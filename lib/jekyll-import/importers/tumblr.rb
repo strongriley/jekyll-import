@@ -102,9 +102,10 @@ module JekyllImport
             content = post["regular-body"]
           when "link"
             title = post["link-text"] || post["link-url"]
-            content = "<a href=\"#{post["link-url"]}\">#{title}</a>"
+            # content = "<a href=\"#{post["link-url"]}\">#{title}</a>"
+            content = nil
             unless post["link-description"].nil?
-              content << "<br/>" + post["link-description"]
+              content = post["link-description"]
             end
           when "photo"
             title = post["slug"].gsub("-"," ")
@@ -165,19 +166,23 @@ module JekyllImport
         else
           slug = post['id']
         end
-        {
+        out = {
           :name => "#{date}-#{slug}.#{format}",
           :header => {
             "layout" => "post",
             "title" => title,
             "date" => Time.parse(post['date']).xmlschema,
             "tags" => (post["tags"] or []),
-            "tumblr_url" => post["url-with-slug"]
+            "tumblr_url" => post["url-with-slug"],
           },
           :content => content,
           :url => post["url"],
           :slug => post["url-with-slug"],
         }
+        if post['type'] == 'link'
+          out[:header]['linked_url'] = post['link-url']
+        end
+        out
       end
 
       # Attempts to fetch the largest version of a photo available for a post.
