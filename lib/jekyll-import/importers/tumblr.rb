@@ -224,7 +224,9 @@ module JekyllImport
           jekyll_url = if Jekyll.const_defined? :Post
                          Jekyll::Post.new(site, Dir.pwd, "", "tumblr/" + post[:name]).url
                        else
-                         Jekyll::Document.new(File.expand_path("_posts/tumblr/#{post[:name]}"), site: site, collection: site.posts).url
+                         d = Jekyll::Document.new(File.expand_path("_posts/tumblr/#{post[:name]}"), site: site, collection: site.posts)
+                         d.read
+                         d.url
                        end
           redirect_dir = tumblr_url.sub(/\//, "") + "/"
           FileUtils.mkdir_p redirect_dir
